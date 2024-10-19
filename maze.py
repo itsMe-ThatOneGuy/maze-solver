@@ -27,6 +27,7 @@ class Maze:
             
         self.create_cells()
         self.break_enterance_and_exit()
+        self.break_walls_r(0, 0)
 
     def create_cells(self):
         for i in range(self.num_cols):
@@ -61,3 +62,39 @@ class Maze:
         bottom_y = self.num_rows - 1
         self.cells[bottom_x][bottom_y].has_bottom_wall = False
         self.draw_cell(bottom_x, bottom_y)
+
+    def break_walls_r(self, i, j):
+        self.cells[i][j].visited = True
+        while True:
+            next_list = []
+
+            if i > 0 and not self.cells[i - 1][j].visited:
+                next_list.append((i - 1, j))
+            if i < self.num_cols - 1 and not self.cells[i + 1][j].visited:
+                next_list.append((i + 1, j))
+            if j > 0 and not self.cells[i][j - 1].visited:
+                next_list.append((i, j - 1))
+            if j < self.num_rows - 1 and not self.cells[i][j + 1].visited:
+                next_list.append((i, j + 1))
+
+            if len(next_list) == 0:
+                self.draw_cell(i, j)
+                return
+            
+            direction = random.randrange(len(next_list))
+            next = next_list[direction]
+            
+            if next[0] == i + 1:
+                self.cells[i][j].has_right_wall = False
+                self.cells[i + 1][j].has_left_wall = False
+            if next[0] == i - 1:
+                self.cells[i][j].has_left_wall = False
+                self.cells[i - 1][j].has_right_wall = False
+            if next[1] == j + 1:
+                self.cells[i][j].has_bottom_wall = False
+                self.cells[i][j + 1].has_top_wall = False
+            if next[1] == j - 1:
+                self.cells[i][j].has_top_wall = False
+                self.cells[i][j - 1].has_bottom_wall = False
+
+            self.break_walls_r(next[0], next[1])
