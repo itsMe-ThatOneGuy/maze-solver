@@ -12,6 +12,7 @@ class Maze:
         cell_size_x,
         cell_size_y,
         win=None,
+        seed=None,
     ):
         self.x1 = x1
         self.y1 = y1
@@ -21,7 +22,9 @@ class Maze:
         self.cell_size_y = cell_size_y
         self.win = win
         self.cells = []
-
+        if seed:
+            random.seed(seed)
+            
         self.create_cells()
         self.break_enterance_and_exit()
 
